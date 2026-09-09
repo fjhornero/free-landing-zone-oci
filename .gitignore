@@ -1,0 +1,23 @@
+# Estado de Terraform: nunca versionar (contiene datos sensibles de los recursos)
+*.tfstate
+*.tfstate.*
+
+# Directorios de providers/módulos descargados
+**/.terraform/
+
+# Planes guardados y logs de crash
+tfplan
+*.tfplan
+crash.log
+crash.*.log
+
+# Claves y certificados por si acaban en el repo por error
+*.pem
+*.key
+
+# Ficheros de override locales
+override.tf.json
+*_override.tf.json
+
+# Basura de macOS
+.DS_Store

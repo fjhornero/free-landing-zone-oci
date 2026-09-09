@@ -1,0 +1,42 @@
+# Copyright (c) 2023, 2025, Oracle and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
+
+locals {
+
+  lz_network_configuration = {
+    default_compartment_id = local.network_compartment_id
+    network_configuration_categories = {
+      "${var.service_label}-network" = {
+        vcns                      = merge(local.tt_vcn_1, local.tt_vcn_2, local.tt_vcn_3, local.exa_vcn_1, local.exa_vcn_2, local.exa_vcn_3, local.oke_vcn_1, local.oke_vcn_2, local.oke_vcn_3, local.hub_vcn)
+        non_vcn_specific_gateways = merge(local.drg, local.cpe, local.ipsec, local.fastconnect)
+      }
+    }
+  }
+}
+
+module "lz_network" {
+  source                = "github.com/oci-landing-zones/terraform-oci-modules-networking?ref=v0.8.2"
+  depends_on            = [module.lz_zpr]
+  network_configuration = local.lz_network_configuration
+  network_dependency = local.use_existing_drg ? {
+    "dynamic_routing_gateways" = {
+      "HUB-DRG" = { "id" : trimspace(var.existing_drg_ocid) }
+    }
+  } : null
+  tenancy_ocid = var.tenancy_ocid
+}
+
+resource "null_resource" "validate_hub_vcn_outdoor_allowed_public_cidrs" {
+  count = var.define_net && local.hub_with_vcn && length(local.hub_vcn_outdoor_allowed_public_cidrs) > 0 ? 1 : 0
+  triggers = {
+    cidrs = join(",", local.hub_vcn_outdoor_allowed_public_cidrs)
+  }
+  lifecycle {
+    precondition {
+      condition = alltrue([
+        for cidr in local.hub_vcn_outdoor_allowed_public_cidrs : trimspace(cidr) != "0.0.0.0/0"
+      ])
+      error_message = "VALIDATION FAILURE: hub_vcn_outdoor_allowed_public_cidrs must not include 0.0.0.0/0."
+    }
+  }
+}
