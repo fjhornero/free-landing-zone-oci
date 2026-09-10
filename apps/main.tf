@@ -84,6 +84,7 @@ resource "oci_core_instance" "amd" {
   availability_domain = local.ad_name
   display_name        = "freevm-amd-${count.index + 1}"
   shape               = "VM.Standard.E2.1.Micro"
+  fault_domain        = var.fault_domains[count.index % length(var.fault_domains)]
 
   source_details {
     source_type = "image"
@@ -102,7 +103,9 @@ resource "oci_core_instance" "amd" {
   }
 
   lifecycle {
-    ignore_changes = [source_details[0].source_id] # no recrear la VM cuando Oracle publique una imagen más nueva
+    # source_id: no recrear la VM cuando Oracle publique una imagen más nueva.
+    # fault_domain: la rotación de FDs entre reintentos no debe recrear VMs ya creadas.
+    ignore_changes = [source_details[0].source_id, fault_domain]
   }
 }
 

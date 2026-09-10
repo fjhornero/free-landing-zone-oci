@@ -15,6 +15,22 @@ variable "amd_instance_count" {
   default     = 2
 }
 
+variable "adb_workload" {
+  description = "Workload de la Autonomous DB Always Free: OLTP (ATP), DW (ADW), AJD (JSON) o APEX."
+  type        = string
+  default     = "OLTP"
+  validation {
+    condition     = contains(["OLTP", "DW", "AJD", "APEX"], var.adb_workload)
+    error_message = "adb_workload debe ser OLTP, DW, AJD o APEX."
+  }
+}
+
+variable "fault_domains" {
+  description = "Fault domains a los que se asignan las VMs (amd[i] usa el elemento i mod N). Se rota entre reintentos para sondear capacidad."
+  type        = list(string)
+  default     = ["FAULT-DOMAIN-1", "FAULT-DOMAIN-2", "FAULT-DOMAIN-3"]
+}
+
 variable "deploy_arm" {
   description = "Si true, despliega también la VM Ampere A1.Flex. Desactivada por defecto por falta de capacidad free tier en eu-madrid-1."
   type        = bool
