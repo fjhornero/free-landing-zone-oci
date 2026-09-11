@@ -31,8 +31,9 @@ resource "oci_database_autonomous_database" "free" {
 
   lifecycle {
     # admin_password: no rotar la contraseña en applies posteriores.
-    # data_storage_size_in_tbs: el free tier aprovisiona 0.02 TB; sin esto cada apply
-    # intentaria "ampliar" a 1 TB y Oracle lo rechaza (403 en Always Free).
-    ignore_changes = [admin_password, data_storage_size_in_tbs]
+    # data_storage_size_in_tbs y cpu_core_count: la ADB Always Free reporta
+    # 0.02 TB y 0 OCPUs (modelo ECPU); si no se ignoran, cada apply intenta un
+    # UpdateAutonomousDatabase que Oracle rechaza con 403 en Always Free.
+    ignore_changes = [admin_password, data_storage_size_in_tbs, cpu_core_count]
   }
 }
