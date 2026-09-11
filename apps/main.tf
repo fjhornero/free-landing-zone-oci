@@ -37,10 +37,10 @@ data "oci_core_images" "ol_amd" {
   sort_order               = "DESC"
 }
 
-data "oci_core_images" "ol_arm" {
+data "oci_core_images" "ubuntu_arm" {
   compartment_id           = local.app_cmp_id
-  operating_system         = "Oracle Linux"
-  operating_system_version = "9"
+  operating_system         = "Canonical Ubuntu"
+  operating_system_version = "24.04"
   shape                    = "VM.Standard.A1.Flex"
   sort_by                  = "TIMECREATED"
   sort_order               = "DESC"
@@ -124,7 +124,7 @@ resource "oci_core_instance" "arm" {
 
   source_details {
     source_type = "image"
-    source_id   = data.oci_core_images.ol_arm.images[0].id
+    source_id   = data.oci_core_images.ubuntu_arm.images[0].id
   }
 
   create_vnic_details {

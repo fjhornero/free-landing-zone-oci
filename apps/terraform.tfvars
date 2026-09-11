@@ -3,3 +3,9 @@ allowed_ssh_cidr = "90.75.234.123/32"
 
 # Clave SSH inyectada en las VMs (default: ~/.ssh/id_rsa.pub, definido en variables.tf).
 # ssh_public_key_path = "~/.ssh/id_rsa.pub"
+
+# VM Ampere A1.Flex (Ubuntu 24.04 aarch64, 4 OCPU / 24 GB Always Free)
+deploy_arm = true
+
+# AMD E2.1.Micro canceladas: solo desplegamos la Ampere A1
+amd_instance_count = 0

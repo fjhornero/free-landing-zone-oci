@@ -30,6 +30,9 @@ resource "oci_database_autonomous_database" "free" {
   whitelisted_ips = [var.allowed_ssh_cidr, local.vcn_id]
 
   lifecycle {
-    ignore_changes = [admin_password] # no rotar la contraseña en applies posteriores
+    # admin_password: no rotar la contraseña en applies posteriores.
+    # data_storage_size_in_tbs: el free tier aprovisiona 0.02 TB; sin esto cada apply
+    # intentaria "ampliar" a 1 TB y Oracle lo rechaza (403 en Always Free).
+    ignore_changes = [admin_password, data_storage_size_in_tbs]
   }
 }
