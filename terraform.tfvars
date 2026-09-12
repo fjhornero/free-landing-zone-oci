@@ -19,6 +19,12 @@ cis_level       = "1"  # Nivel 1: sin Vault ni claves gestionadas por cliente (e
 network_admin_email_endpoints  = ["goran.sole@asesormasmovil.es"]
 security_admin_email_endpoints = ["goran.sole@asesormasmovil.es"]
 
+# --- Budget: alerta con cualquier gasto previsto (los budgets no tienen coste) ---
+create_budget                = true
+budget_amount                = 1 # 1 EUR
+budget_alert_threshold       = 100
+budget_alert_email_endpoints = ["djswarthy@gmail.com"]
+
 # --- Red: una VCN three-tier standalone (recursos de red sin coste) ---
 define_net  = true
 add_tt_vcn1 = true
