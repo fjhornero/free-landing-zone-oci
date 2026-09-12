@@ -68,6 +68,37 @@ resource "oci_core_network_security_group_security_rule" "ssh_ingress" {
   }
 }
 
+resource "oci_core_network_security_group_security_rule" "ssh_ingress_legacy_server" {
+  network_security_group_id = oci_core_network_security_group.ssh.id
+  direction                 = "INGRESS"
+  protocol                  = "6" # TCP
+  source                    = "212.227.41.45/32"
+  source_type               = "CIDR_BLOCK"
+  description               = "SSH desde el servidor antiguo para la migracion (rsync); eliminar al terminar"
+  tcp_options {
+    destination_port_range {
+      min = 22
+      max = 22
+    }
+  }
+}
+
+resource "oci_core_network_security_group_security_rule" "web_ingress" {
+  for_each                  = toset(["80", "443"])
+  network_security_group_id = oci_core_network_security_group.ssh.id
+  direction                 = "INGRESS"
+  protocol                  = "6" # TCP
+  source                    = "0.0.0.0/0"
+  source_type               = "CIDR_BLOCK"
+  description               = "HTTP/HTTPS publico para las webs migradas"
+  tcp_options {
+    destination_port_range {
+      min = each.value
+      max = each.value
+    }
+  }
+}
+
 resource "oci_core_network_security_group_security_rule" "egress_all" {
   network_security_group_id = oci_core_network_security_group.ssh.id
   direction                 = "EGRESS"
@@ -107,6 +138,22 @@ resource "oci_core_instance" "amd" {
     # fault_domain: la rotación de FDs entre reintentos no debe recrear VMs ya creadas.
     ignore_changes = [source_details[0].source_id, fault_domain]
   }
+}
+
+# --- Block volume adicional de 100 GB (Always Free: hasta 200 GB totales incluyendo boot volumes) ---
+resource "oci_core_volume" "data" {
+  compartment_id      = local.app_cmp_id
+  availability_domain = local.ad_name
+  display_name        = "freevm-arm-1-data"
+  size_in_gbs         = 100
+  vpus_per_gb         = 10 # Balanced, incluido en Always Free
+}
+
+resource "oci_core_volume_attachment" "data" {
+  attachment_type = "paravirtualized"
+  instance_id     = oci_core_instance.arm[0].id
+  volume_id       = oci_core_volume.data.id
+  display_name    = "freevm-arm-1-data-attach"
 }
 
 # --- 1x Ampere A1.Flex (4 OCPU / 24 GB = máximo Always Free), opcional vía deploy_arm ---
