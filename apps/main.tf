@@ -68,21 +68,6 @@ resource "oci_core_network_security_group_security_rule" "ssh_ingress" {
   }
 }
 
-resource "oci_core_network_security_group_security_rule" "ssh_ingress_legacy_server" {
-  network_security_group_id = oci_core_network_security_group.ssh.id
-  direction                 = "INGRESS"
-  protocol                  = "6" # TCP
-  source                    = "212.227.41.45/32"
-  source_type               = "CIDR_BLOCK"
-  description               = "SSH desde el servidor antiguo para la migracion (rsync); eliminar al terminar"
-  tcp_options {
-    destination_port_range {
-      min = 22
-      max = 22
-    }
-  }
-}
-
 resource "oci_core_network_security_group_security_rule" "web_ingress" {
   for_each                  = toset(["80", "443"])
   network_security_group_id = oci_core_network_security_group.ssh.id
