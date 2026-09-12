@@ -116,6 +116,7 @@ resource "oci_core_instance" "arm" {
   availability_domain = local.ad_name
   display_name        = "freevm-arm-1"
   shape               = "VM.Standard.A1.Flex"
+  fault_domain        = var.arm_fault_domain != "" ? var.arm_fault_domain : null
 
   shape_config {
     ocpus         = var.arm_ocpus
@@ -139,6 +140,7 @@ resource "oci_core_instance" "arm" {
   }
 
   lifecycle {
-    ignore_changes = [source_details[0].source_id]
+    # fault_domain: rotarlo entre reintentos no debe recrear la VM una vez creada.
+    ignore_changes = [source_details[0].source_id, fault_domain]
   }
 }

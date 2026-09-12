@@ -31,6 +31,12 @@ variable "fault_domains" {
   default     = ["FAULT-DOMAIN-1", "FAULT-DOMAIN-2", "FAULT-DOMAIN-3"]
 }
 
+variable "arm_fault_domain" {
+  description = "Fault domain fijo para la VM Ampere A1 (se rota manualmente entre reintentos para sondear capacidad)."
+  type        = string
+  default     = "FAULT-DOMAIN-1"
+}
+
 variable "deploy_arm" {
   description = "Si true, despliega también la VM Ampere A1.Flex. Desactivada por defecto por falta de capacidad free tier en eu-madrid-1."
   type        = bool
