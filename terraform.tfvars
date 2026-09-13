@@ -13,7 +13,12 @@ region           = "eu-madrid-1"
 # --- General ---
 service_label   = "freelz"
 is_free_tenancy = true # Free tier: no despliega Cloud Guard ni Security Zones (no disponibles)
-cis_level       = "1"  # Nivel 1: sin Vault ni claves gestionadas por cliente (evita costes)
+cis_level       = "1"  # Nivel 1: sin claves gestionadas por cliente (evita costes)
+
+# Vault compartido (tipo DEFAULT) en el compartimento de seguridad. Sin coste:
+# Always Free cubre todas las key versions por software, 20 por HSM y 150
+# secretos. El que se factura es el VIRTUAL_PRIVATE, que no usamos.
+enable_vault = true
 
 # --- Notificaciones (requieren confirmar la suscripción por email) ---
 network_admin_email_endpoints  = ["goran.sole@asesormasmovil.es"]
