@@ -8,6 +8,11 @@ locals {
   all_flow_logs_defined_tags  = {}
   all_flow_logs_freeform_tags = {}
 
+  # Interruptor de los flow logs: deshabilitados por defecto para no consumir el
+  # límite gratuito de Logging (el de la subred web ingería ~8 GB/mes de ruido de
+  # escaneos). Poner a true y hacer apply solo cuando haga falta debugear tráfico.
+  flow_logs_enabled = false
+
   all_lz_subnets = module.lz_network.provisioned_networking_resources.subnets
 
   flow_logs = { for k, v in local.all_lz_subnets : "${k}-FLOW-LOG" =>
@@ -17,8 +22,8 @@ locals {
       service            = "flowlogs"
       category           = "all",
       resource_id        = v.id,
-      is_enabled         = true,
-      retention_duration = 90,
+      is_enabled         = local.flow_logs_enabled,
+      retention_duration = 30, # mínimo permitido; reduce el almacenamiento de logs (free tier: 10 GB/mes)
       defined_tags       = local.flow_logs_defined_tags,
       freeform_tags      = local.flow_logs_freeform_tags
     }
@@ -28,6 +33,8 @@ locals {
   #----- Flow Logs configuration definition. Input to module.
   #------------------------------------------------------------------------
   logging_configuration = {
+    # CIS exige retención >= 90 días; lo desactivamos para permitir 30 días (free tier)
+    enable_cis_checks      = false
     default_compartment_id = local.security_compartment_id
     default_defined_tags   = local.flow_logs_defined_tags
     default_freeform_tags  = local.flow_logs_freeform_tags
