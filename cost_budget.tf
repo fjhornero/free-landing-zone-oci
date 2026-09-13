@@ -41,6 +41,13 @@ locals {
         values : local.enclosing_compartment_id != var.tenancy_ocid ? [local.enclosing_compartment_id] : [var.tenancy_ocid]
       }
       amount : var.budget_amount
+      # Dia de inicio del ciclo mensual. Sin fijarlo, el modulo lo calcula con
+      # formatdate("DD", timestamp()): el valor es desconocido en plan, asi que
+      # cada plan muestra un cambio pendiente y cada apply reescribe el offset
+      # al dia en que se ejecuta. 13 es el valor ya provisionado en OCI.
+      schedule : {
+        day_of_month_to_begin : 13
+      }
       defined_tags  = local.cost_management_defined_tags
       freeform_tags = local.cost_management_freeform_tags
       alert_rule : {
