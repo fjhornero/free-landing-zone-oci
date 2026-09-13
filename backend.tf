@@ -11,6 +11,10 @@
 # -----------------------------------------------------------------------------
 
 terraform {
+  # providers.tf (upstream de Oracle) pide >= 1.3.0, pero el backend nativo
+  # "oci" solo existe desde Terraform 1.12. Los constraints se acumulan.
+  required_version = ">= 1.12.0"
+
   backend "oci" {
     bucket              = "oci-tfstate"
     namespace           = "axwqnihb5ohp"

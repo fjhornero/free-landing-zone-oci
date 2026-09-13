@@ -5,9 +5,14 @@
 # SSH restringido por NSG al CIDR de var.allowed_ssh_cidr.
 
 data "terraform_remote_state" "lz" {
-  backend = "local"
+  backend = "oci"
   config = {
-    path = "../terraform.tfstate"
+    bucket              = "oci-tfstate"
+    namespace           = "axwqnihb5ohp"
+    key                 = "free-landing-zone/terraform.tfstate"
+    region              = "eu-madrid-1"
+    auth                = "APIKey"
+    config_file_profile = "FREE-TIER"
   }
 }
 

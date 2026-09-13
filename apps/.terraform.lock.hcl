@@ -4,6 +4,7 @@
 provider "registry.terraform.io/hashicorp/random" {
   version = "3.9.0"
   hashes = [
+    "h1:OO+IuvQJSPmWdN8AyyIEvPJbLvDQpgX/zbktoa9KsJE=",
     "h1:o0s5Mk9NXMP60nlheO1r0LsDGGratFb3oL0t7bD2QnM=",
     "zh:161ad0bd9a75768c82f53fb6e7172a9d8be2d4889b012645a34795031aaf1bf1",
     "zh:19dc9a5b17729725ccfc4f45b0500af0ee5bc6b6b160c7adb8f2bf617d2c80ea",
@@ -25,6 +26,7 @@ provider "registry.terraform.io/oracle/oci" {
   version = "9.0.0"
   hashes = [
     "h1:hZ3UDmcPaIjffrKOf47x3gur95z5oxQRBI+P4u0wqCM=",
+    "h1:s5JWdYzmIzEqhLkv8guJjZqiZLYw0hLv5xLFemBjn9M=",
     "zh:09693e1e23da9085e16a3a40ab379f01252a6ea9afe6943b84bea1a05bafff1c",
     "zh:1b5b612028533d01e19b0c20f301d7bf9b79d5c0321ea32ef3f9d9cfe4887538",
     "zh:1f44f8fcb8bed6f618271cdf2082e2c304a52a1b097a01fc47f0d23479286a35",
