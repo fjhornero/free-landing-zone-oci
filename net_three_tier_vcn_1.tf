@@ -140,7 +140,10 @@ locals {
                     destination_type   = "CIDR_BLOCK"
                   }
                 },
-                {
+                # Con tt_vcn1_web_subnet_object_storage_via_psa la subred web accede a
+                # Object Storage por el endpoint PSA (net_psa.tf) en vez de por el
+                # Service Gateway, asi que esta ruta sobra.
+                var.tt_vcn1_web_subnet_object_storage_via_psa ? {} : {
                   "OSN-RULE" = {
                     network_entity_key = "TT-VCN-1-SERVICE-GATEWAY"
                     description        = "Traffic destined for ${var.tt_vcn1_web_subnet_is_private == false ? "OCI Object Storage Service" : "all OCI services"} in Oracle Services Network is routed through the Service Gateway."

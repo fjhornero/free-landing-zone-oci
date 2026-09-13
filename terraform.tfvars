@@ -30,3 +30,6 @@ define_net  = true
 add_tt_vcn1 = true
 # Defaults aplicados: CIDR 10.0.0.0/20, subred web pública + app/db privadas,
 # sin DRG ni Hub VCN (hub_deployment_option = "No cross-VCN or on-premises connectivity")
+
+# --- Object Storage por PSA en lugar del Service Gateway (subred web TT-VCN-1) ---
+tt_vcn1_web_subnet_object_storage_via_psa = true
