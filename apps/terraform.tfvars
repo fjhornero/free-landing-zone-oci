@@ -9,3 +9,6 @@ deploy_arm = true
 
 # AMD E2.1.Micro canceladas: solo desplegamos la Ampere A1
 amd_instance_count = 0
+
+# Rotación anual de la password ADMIN del ADB (360 días es el máximo que admite OCI Vault).
+adb_secret_rotation_interval = "P360D"

@@ -23,10 +23,13 @@ output "adb" {
   }
 }
 
-output "adb_admin_password" {
-  description = "Contraseña del usuario ADMIN de la ADB (leer con: terraform output -raw adb_admin_password)."
-  value       = random_password.adb_admin.result
-  sensitive   = true
+# La password ADMIN vive ahora en OCI Vault y rota automáticamente: el valor de
+# random_password queda obsoleto tras la primera rotación. Leer siempre del secreto:
+#   oci secrets secret-bundle get --secret-id <ocid> --profile FREE-TIER \
+#     --query 'data."secret-bundle-content".content' --raw-output | base64 -d
+output "adb_admin_secret" {
+  description = "OCID del secreto de Vault con la password ADMIN de la ADB (fuente de verdad tras cada rotación)."
+  value       = oci_vault_secret.adb_admin.id
 }
 
 output "ssh_nsg_id" {

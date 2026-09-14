@@ -25,6 +25,18 @@ variable "adb_workload" {
   }
 }
 
+variable "vault_display_name" {
+  description = "Nombre del vault existente en freelz-security-cmp donde se guarda el secreto del ADB."
+  type        = string
+  default     = "freelz-vault"
+}
+
+variable "adb_secret_rotation_interval" {
+  description = "Intervalo de auto-rotación de la password ADMIN del ADB, en formato ISO 8601 (mín. P1D, máx. P360D)."
+  type        = string
+  default     = "P30D"
+}
+
 variable "fault_domains" {
   description = "Fault domains a los que se asignan las VMs (amd[i] usa el elemento i mod N). Se rota entre reintentos para sondear capacidad."
   type        = list(string)
