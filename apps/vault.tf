@@ -39,6 +39,10 @@ resource "oci_vault_secret" "adb_admin" {
   secret_name    = local.adb_secret_name
   description    = "Password del usuario ADMIN de freelz-adb-1, rotada automáticamente por OCI Vault."
 
+  # Requisito de la rotación con target ADB: sin auto-generación habilitada,
+  # RotateSecret falla con "Secret must have auto-generation enabled".
+  enable_auto_generation = true
+
   # Versión inicial: la password actual del ADB (random_password de db.tf),
   # para que el secreto sea válido desde el primer momento.
   secret_content {
